@@ -71,7 +71,7 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
                 var eliteIndividualList = Select();
 
                 // 交叉
-                var progenyIndividualList = CrossOver();
+                var progenyIndividualList = CrossOver(eliteIndividualList);
 
                 // 生成
                 IndividualList = GenerateNextGeneration(IndividualList, eliteIndividualList, progenyIndividualList);
@@ -143,11 +143,11 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
     }
 
     // 交叉
-    private List<Individual> CrossOver()
+    private List<Individual> CrossOver( List<Individual> eliteIndividualList )
     {
         var progenyIndividualList = new List<Individual>();
 
-        for (var i = 0; i < IndividualNum; i++)
+        for (var i = 0; i < ProgenyRate * IndividualNum; i++)
         {
             progenyIndividualList.Add(new Individual());
 
@@ -158,11 +158,11 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
         }
 
 
-        for (var i = 0; i < IndividualList.Count; i++)
+        for (var i = 0; i < ProgenyRate * IndividualNum; i++)
         {
-            var firstGeneList = IndividualList.LoopElementAt(i).GeneList;
-            var secoundGeneList = IndividualList.LoopElementAt(i+1).GeneList;
-            var thirdGeneList = IndividualList.LoopElementAt(i+2).GeneList;
+            var firstGeneList = eliteIndividualList.LoopElementAt(i).GeneList;
+            var secoundGeneList = eliteIndividualList.LoopElementAt(i+1).GeneList;
+            var thirdGeneList = eliteIndividualList.LoopElementAt(i+2).GeneList;
 
             var resultFirstGeneList = progenyIndividualList.LoopElementAt(i).GeneList;
             var resultSecoundGeneList = progenyIndividualList.LoopElementAt(i + 1).GeneList;
@@ -172,7 +172,7 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
             
             for (var j = 0; j < GeneLength; j++)
             {
-                gradientPointList.Add((firstGeneList[j] + secoundGeneList[j] + thirdGeneList[j]) / 3);
+                gradientPointList.Add((firstGeneList[j] + secoundGeneList[j] + thirdGeneList[j]) / 3f);
             }
             
             var firstExpansionPointList = new List<float>();
@@ -200,7 +200,7 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
         // Clamp
         foreach (var individual in progenyIndividualList)
         {
-            for (var index = 0; index < individual.GeneList.Count; index++)
+            for (var index = 0; index < GeneLength; index++)
             {
                 individual.GeneList[index] = Mathf.Clamp(individual.GeneList[index], MinTorque, MaxTorque);
             }
