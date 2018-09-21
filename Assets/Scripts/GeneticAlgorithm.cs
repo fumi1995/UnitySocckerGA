@@ -188,8 +188,8 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
 
             for (var j = 0; j < GeneLength; j++)
             {
-                var r1 = Random.Range(0, 1);
-                var r2 = Random.Range(0, 1) ^ (1 / 2);
+                var r1 = Random.Range(0, 1f);
+                var r2 = Mathf.Pow(Random.Range(0, 1f), 0.5f);
 
                 resultFirstGeneList[j] = firstExpansionPointList[j];
                 resultSecoundGeneList[j] = r1 * (firstExpansionPointList[j] - secoundExpansionPointList[j]) + secoundExpansionPointList[j];
