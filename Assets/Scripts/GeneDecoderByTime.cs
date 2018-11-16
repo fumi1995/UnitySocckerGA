@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using UniRx;
 using UnityEngine;
 
+[RequireComponent(typeof(ChromosomeMonobehaviour))]
 [RequireComponent(typeof(SimpleAddTorque))]
 public class GeneDecoderByTime : MonoBehaviour{
 
@@ -12,12 +13,26 @@ public class GeneDecoderByTime : MonoBehaviour{
 
     private readonly Queue<float> _geneQueue = new Queue<float>();
 
-    [SerializeField] [NotNull] private IndividualMonobehaviour _individualMonobehaviour;
-    
+    [SerializeField] [NotNull] private ChromosomeMonobehaviour _chromosomeMonobehaviour;
+
+    [SerializeField] [NotNull] private SimpleAddTorque _simpleAddTorque;
+
+    private void Reset()
+    {
+        _chromosomeMonobehaviour = GetComponent<ChromosomeMonobehaviour>();
+        _simpleAddTorque = GetComponent<SimpleAddTorque>();
+    }
+
+    private void Awake()
+    {
+        _chromosomeMonobehaviour = GetComponent<ChromosomeMonobehaviour>();
+        _simpleAddTorque = GetComponent<SimpleAddTorque>();
+    }
+
     private void Start (){
 
         // キューにデータを突っ込む
-        _individualMonobehaviour.Indivudual.GeneList.ForEach(gene=>_geneQueue.Enqueue(gene));
+        _chromosomeMonobehaviour.Chromosome.GeneList.ForEach(gene => _geneQueue.Enqueue(gene));
 
         // 一定間隔ごとにトルクを変更する
 	    Observable
@@ -25,7 +40,7 @@ public class GeneDecoderByTime : MonoBehaviour{
 	        .Where(_ => _geneQueue.Count > 0)
 	        .Subscribe(_ => {
 
-	            _individualMonobehaviour.Indivudual.SimpleAddTorque._torqueMagnitude = _geneQueue.Dequeue();
+	            _simpleAddTorque._torqueMagnitude = _geneQueue.Dequeue();
 
 	        }).AddTo(gameObject);
 	}

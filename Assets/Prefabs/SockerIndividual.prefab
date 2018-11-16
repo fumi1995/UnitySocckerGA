@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114471924109124416}
   - component: {fileID: 114708065887233518}
   - component: {fileID: 114161832232766976}
+  - component: {fileID: 114385937245172350}
   m_Layer: 0
   m_Name: LowerLeg
   m_TagString: Untagged
@@ -64,9 +65,28 @@ GameObject:
   - component: {fileID: 54956842688889658}
   - component: {fileID: 144261374813644128}
   - component: {fileID: 114631886530348864}
-  - component: {fileID: 114354430666747928}
+  - component: {fileID: 114816721931278506}
+  - component: {fileID: 114080967050817286}
   m_Layer: 0
   m_Name: Thigh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1796557592600216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4067764417978072}
+  - component: {fileID: 23701522027044078}
+  - component: {fileID: 102530967545473244}
+  - component: {fileID: 114468098888121238}
+  m_Layer: 0
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,6 +144,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4067764417978072
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1796557592600216}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.014, y: 1.86, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4524148967918866}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4210703453590712
 Transform:
   m_ObjectHideFlags: 1
@@ -160,6 +193,7 @@ Transform:
   m_LocalPosition: {x: -11.42, y: 0, z: -26.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4067764417978072}
   - {fileID: 4576104995609638}
   - {fileID: 4819744576638950}
   m_Father: {fileID: 0}
@@ -178,7 +212,7 @@ Transform:
   - {fileID: 4210703453590712}
   - {fileID: 4960861043264698}
   m_Father: {fileID: 4524148967918866}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4819744576638950
 Transform:
@@ -191,7 +225,7 @@ Transform:
   m_LocalScale: {x: 0.22, y: 0.22, z: 0.22}
   m_Children: []
   m_Father: {fileID: 4524148967918866}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4960861043264698
 Transform:
@@ -293,6 +327,41 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 88c1ab4b365b7be4599f4bf0837dbc75, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!23 &23701522027044078
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1796557592600216}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -432,6 +501,40 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!102 &102530967545473244
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1796557592600216}
+  m_Text: 0000
+  m_OffsetZ: 0
+  m_CharacterSize: 0.1
+  m_LineSpacing: 1
+  m_Anchor: 4
+  m_Alignment: 1
+  m_TabSize: 4
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_RichText: 0
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4278190080
+--- !u!114 &114080967050817286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1603730810731220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e538ca24f2e24a84dac255a6c3954649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chromosomeMonobehaviour: {fileID: 114385937245172350}
+  _simpleAddTorque: {fileID: 114471924109124416}
 --- !u!114 &114161832232766976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -459,44 +562,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7094de50414293a44888e291446ff9bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsAutoInitialized: 0
   Indivudual:
-    GeneList:
-    - 100
-    - 100
-    - 100
-    - 100
-    - 100
-    - -100
-    - -100
-    - -100
-    - -100
-    - -100
-    - 100
-    - 100
-    - 100
-    - 100
-    - 100
-    - -100
-    - -100
-    - -100
-    - -100
-    - -100
+    ChromosomeList: []
     Evaluation: 0
-    SimpleAddTorque: {fileID: 114471924109124416}
-    GeneDecoderByTime: {fileID: 114708065887233518}
     SockerBallRigidBody: {fileID: 54057203987035288}
     IndividualMonobehaviour: {fileID: 114280016146887754}
---- !u!114 &114354430666747928
+  ScoreText: {fileID: 114468098888121238}
+--- !u!114 &114385937245172350
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1603730810731220}
-  m_Enabled: 0
+  m_GameObject: {fileID: 1578428589307872}
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b09acc663739d3a4cba1180784c95bb6, type: 3}
+  m_Script: {fileID: 11500000, guid: 670d54b12489b7746a313663f0d0f15c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Chromosome:
+    GeneList: []
+--- !u!114 &114468098888121238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1796557592600216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bae7ce9427068a047b062976ffa69515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
 --- !u!114 &114471924109124416
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -509,7 +606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _torqueAxis: {x: -1, y: 0, z: 0}
-  _torqueMagnitude: -100
+  _torqueMagnitude: -150
   _forceMode: 0
 --- !u!114 &114631886530348864
 MonoBehaviour:
@@ -517,13 +614,13 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1603730810731220}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6388baf5d7bc35b4d993fcb62cfd1a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _torqueAxis: {x: 1, y: 0, z: 0}
-  _torqueMagnitude: 30
+  _torqueAxis: {x: -1, y: 0, z: 0}
+  _torqueMagnitude: -100
   _forceMode: 0
 --- !u!114 &114708065887233518
 MonoBehaviour:
@@ -536,7 +633,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e538ca24f2e24a84dac255a6c3954649, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _individualMonobehaviour: {fileID: 114280016146887754}
+  _chromosomeMonobehaviour: {fileID: 114385937245172350}
+  _simpleAddTorque: {fileID: 114471924109124416}
+--- !u!114 &114816721931278506
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1603730810731220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 670d54b12489b7746a313663f0d0f15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Chromosome:
+    GeneList: []
 --- !u!135 &135533106744754710
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -585,7 +696,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 1, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 1.747, z: -13.099}
+  m_ConnectedAnchor: {x: -11.42, y: 1.747, z: -26.06}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -65,6 +67,9 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
                 // 評価
                 Evaluate();
 
+                // 結果出力
+                FileOutput();
+
                 // 終了条件
 
                 // 選択
@@ -81,6 +86,11 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
             }).AddTo(gameObject);
     }
 
+    private void Update()
+    {
+        IndividualList.ForEach(individual => individual.IndividualMonobehaviour.ScoreText.SetText(individual.Evaluation.ToString()));
+    }
+
     // 集団の生成
     private void GeneratePopulation()
     {
@@ -92,13 +102,19 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
 
             var individual = o.GetComponent<IndividualMonobehaviour>().Indivudual;
 
-            individual.GeneList.Clear();
+            individual.IndividualMonobehaviour.Initialization();
             
-            // ランダムな遺伝子生成
-            for (var j = 0; j < GeneLength; j++)
+            individual.ChromosomeList.ForEach(chromesome =>
             {
-                individual.GeneList.Add(Random.Range(MinTorque, MaxTorque));
-            }
+                chromesome.GeneList.Clear();
+
+                // ランダムな遺伝子生成
+                for (var j = 0; j < GeneLength; j++)
+                {
+                    chromesome.GeneList.Add(Random.Range(MinTorque, MaxTorque));
+                }
+
+            });
 
             IndividualList.Add(individual);
         }
@@ -115,8 +131,8 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
     // 評価
     private void Evaluate()
     {
-        // IndividualList.ForEach(individual => individual.Evaluation = individual.SockerBallRigidBody.velocity.magnitude);
-        IndividualList.ForEach(individual => individual.Evaluation = individual.SockerBallRigidBody.transform.position.z);
+        IndividualList.ForEach(individual => individual.Evaluation = individual.SockerBallRigidBody.transform.position.z < 0 ? 0 : individual.SockerBallRigidBody.velocity.magnitude);
+        // IndividualList.ForEach(individual => individual.Evaluation = individual.SockerBallRigidBody.transform.position.z);
 
         Debug.Log("Top Record:" + IndividualList.OrderBy(individual=> -individual.Evaluation).First().Evaluation + "[m]");
     }
@@ -147,63 +163,77 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
     {
         var progenyIndividualList = new List<Individual>();
 
+        // 染色体数
+        var chromosomeCount = eliteIndividualList.First().ChromosomeList.Count;
+
         for (var i = 0; i < ProgenyRate * IndividualNum; i++)
         {
             progenyIndividualList.Add(new Individual());
 
+
+            // 染色体を生成
+            for (var j = 0; j < chromosomeCount; j++)
+            {
+                progenyIndividualList.Last().ChromosomeList.Add(new Chromosome());
+            }
+
             for (var j = 0; j < GeneLength; j++)
             {
-                progenyIndividualList[i].GeneList.Add(0);
+                progenyIndividualList[i].ChromosomeList.ForEach(chromesome => chromesome.GeneList.Add(0));
             }
         }
 
-
-        for (var i = 0; i < ProgenyRate * IndividualNum; i++)
+        for (var chromeIdx = 0; chromeIdx < progenyIndividualList.First().ChromosomeList.Count; chromeIdx++)
         {
-            var firstGeneList = eliteIndividualList.LoopElementAt(i).GeneList;
-            var secoundGeneList = eliteIndividualList.LoopElementAt(i+1).GeneList;
-            var thirdGeneList = eliteIndividualList.LoopElementAt(i+2).GeneList;
 
-            var resultFirstGeneList = progenyIndividualList.LoopElementAt(i).GeneList;
-            var resultSecoundGeneList = progenyIndividualList.LoopElementAt(i + 1).GeneList;
-            var resultThirdGeneList = progenyIndividualList.LoopElementAt(i + 2).GeneList;
-
-            var gradientPointList = new List<float>();
-            
-            for (var j = 0; j < GeneLength; j++)
+            for (var i = 0; i < ProgenyRate * IndividualNum; i++)
             {
-                gradientPointList.Add((firstGeneList[j] + secoundGeneList[j] + thirdGeneList[j]) / 3f);
-            }
-            
-            var firstExpansionPointList = new List<float>();
-            var secoundExpansionPointList = new List<float>();
-            var thirdExpansionPointList = new List<float>();
+                var firstGeneList = eliteIndividualList.LoopElementAt(i).ChromosomeList.ElementAt(chromeIdx).GeneList;
+                var secoundGeneList = eliteIndividualList.LoopElementAt(i + 1).ChromosomeList.ElementAt(chromeIdx).GeneList;
+                var thirdGeneList = eliteIndividualList.LoopElementAt(i + 2).ChromosomeList.ElementAt(chromeIdx).GeneList;
 
-            for (var j = 0; j < GeneLength; j++)
+                var resultFirstGeneList = progenyIndividualList.LoopElementAt(i).ChromosomeList.ElementAt(chromeIdx).GeneList;
+                var resultSecoundGeneList = progenyIndividualList.LoopElementAt(i + 1).ChromosomeList.ElementAt(chromeIdx).GeneList;
+                var resultThirdGeneList = progenyIndividualList.LoopElementAt(i + 2).ChromosomeList.ElementAt(chromeIdx).GeneList;
+
+                var gradientPointList = new List<float>();
+
+                for (var j = 0; j < GeneLength; j++)
+                {
+                    gradientPointList.Add((firstGeneList[j] + secoundGeneList[j] + thirdGeneList[j]) / 3f);
+                }
+
+                var firstExpansionPointList = new List<float>();
+                var secoundExpansionPointList = new List<float>();
+                var thirdExpansionPointList = new List<float>();
+
+                for (var j = 0; j < GeneLength; j++)
+                {
+                    firstExpansionPointList.Add(gradientPointList[j] + ExpasionRate * (firstGeneList[j] - gradientPointList[j]));
+                    secoundExpansionPointList.Add(gradientPointList[j] + ExpasionRate * (secoundGeneList[j] - gradientPointList[j]));
+                    thirdExpansionPointList.Add(gradientPointList[j] + ExpasionRate * (thirdGeneList[j] - gradientPointList[j]));
+                }
+
+                for (var j = 0; j < GeneLength; j++)
+                {
+                    var r1 = Random.Range(0, 1f);
+                    var r2 = Mathf.Pow(Random.Range(0, 1f), 0.5f);
+
+                    resultFirstGeneList[j] = firstExpansionPointList[j];
+                    resultSecoundGeneList[j] = r1 * (firstExpansionPointList[j] - secoundExpansionPointList[j]) + secoundExpansionPointList[j];
+                    resultThirdGeneList[j] = r2 * (secoundExpansionPointList[j] - thirdExpansionPointList[j] + r1 * (firstExpansionPointList[j] - secoundExpansionPointList[j]) + thirdExpansionPointList[j]);
+                }
+            }
+
+            // Clamp
+            foreach (var individual in progenyIndividualList)
             {
-                firstExpansionPointList.Add(gradientPointList[j] + ExpasionRate * (firstGeneList[j] - gradientPointList[j]));
-                secoundExpansionPointList.Add(gradientPointList[j] + ExpasionRate * (secoundGeneList[j] - gradientPointList[j]));
-                thirdExpansionPointList.Add(gradientPointList[j] + ExpasionRate * (thirdGeneList[j] - gradientPointList[j]));
+                for (var index = 0; index < GeneLength; index++)
+                {
+                    individual.ChromosomeList[chromeIdx].GeneList[index] = Mathf.Clamp(individual.ChromosomeList[chromeIdx].GeneList[index], MinTorque, MaxTorque);
+                }
             }
 
-            for (var j = 0; j < GeneLength; j++)
-            {
-                var r1 = Random.Range(0, 1f);
-                var r2 = Mathf.Pow(Random.Range(0, 1f), 0.5f);
-
-                resultFirstGeneList[j] = firstExpansionPointList[j];
-                resultSecoundGeneList[j] = r1 * (firstExpansionPointList[j] - secoundExpansionPointList[j]) + secoundExpansionPointList[j];
-                resultThirdGeneList[j] = r2 * (secoundExpansionPointList[j] - thirdExpansionPointList[j] + r1 * (firstExpansionPointList[j] - secoundExpansionPointList[j]) + thirdExpansionPointList[j]);
-            }
-        }
-
-        // Clamp
-        foreach (var individual in progenyIndividualList)
-        {
-            for (var index = 0; index < GeneLength; index++)
-            {
-                individual.GeneList[index] = Mathf.Clamp(individual.GeneList[index], MinTorque, MaxTorque);
-            }
         }
 
         return progenyIndividualList;
@@ -219,8 +249,14 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
         {
             nextGenerationIndividualList.Add(Instantiate(_individualPrefab, new Vector3(nextGenerationIndividualList.Count(), 0, 0), Quaternion.identity).GetComponent<IndividualMonobehaviour>().Indivudual);
 
-            nextGenerationIndividualList.Last().GeneList = individual.GeneList;
-
+            nextGenerationIndividualList.Last().IndividualMonobehaviour.Initialization();
+            
+            foreach (var pair in nextGenerationIndividualList.Last().ChromosomeList
+                    .Zip(individual.ChromosomeList, (nextGenerationChrome, eliteChrome) => new { nextGenerationChrome, eliteChrome }))
+            {
+                pair.nextGenerationChrome.GeneList = pair.eliteChrome.GeneList;
+            }
+            
             nextGenerationIndividualList.Last().Evaluation = individual.Evaluation;
 
             nextGenerationIndividualList.Last().IndividualMonobehaviour.gameObject.name = "Elite";
@@ -231,8 +267,14 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
         {
             nextGenerationIndividualList.Add(Instantiate(_individualPrefab, new Vector3(nextGenerationIndividualList.Count(), 0, 0), Quaternion.identity).GetComponent<IndividualMonobehaviour>().Indivudual);
 
-            nextGenerationIndividualList.Last().GeneList = individual.GeneList;
-
+            nextGenerationIndividualList.Last().IndividualMonobehaviour.Initialization();
+            
+            foreach (var pair in nextGenerationIndividualList.Last().ChromosomeList
+                    .Zip(individual.ChromosomeList, (nextGenerationChrome, eliteChrome) => new { nextGenerationChrome, eliteChrome }))
+            {
+                pair.nextGenerationChrome.GeneList = pair.eliteChrome.GeneList;
+            }
+            
             nextGenerationIndividualList.Last().Evaluation = individual.Evaluation;
 
             nextGenerationIndividualList.Last().IndividualMonobehaviour.gameObject.name = "Progeny";
@@ -243,8 +285,14 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
         {
             nextGenerationIndividualList.Add(Instantiate(_individualPrefab, new Vector3(nextGenerationIndividualList.Count(), 0, 0), Quaternion.identity).GetComponent<IndividualMonobehaviour>().Indivudual);
 
-            nextGenerationIndividualList.Last().GeneList = individual.GeneList;
-
+            nextGenerationIndividualList.Last().IndividualMonobehaviour.Initialization();
+            
+            foreach (var pair in nextGenerationIndividualList.Last().ChromosomeList
+                    .Zip(individual.ChromosomeList, (nextGenerationChrome, eliteChrome) => new { nextGenerationChrome, eliteChrome }))
+            {
+                pair.nextGenerationChrome.GeneList = pair.eliteChrome.GeneList;
+            }
+            
             nextGenerationIndividualList.Last().Evaluation = individual.Evaluation;
 
             nextGenerationIndividualList.Last().IndividualMonobehaviour.gameObject.name = "OldGeneration";
@@ -255,5 +303,26 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
         IndividualList.Clear();
 
         return nextGenerationIndividualList;
+    }
+
+    // 結果出力
+    private void FileOutput()
+    {
+        StreamWriter sw;
+        FileInfo fi;
+        fi = new FileInfo(Application.dataPath + "/Result.csv");
+        sw = fi.AppendText();
+
+        var outputText = "";
+
+        outputText += "第" + _generationNum + "世代適応度";
+        IndividualList.ForEach(individual =>
+        {
+            outputText += "," + individual.Evaluation.ToString();
+        });
+        sw.WriteLine(outputText);
+
+        sw.Flush();
+        sw.Close();
     }
 }
