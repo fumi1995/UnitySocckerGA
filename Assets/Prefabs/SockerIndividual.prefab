@@ -581,7 +581,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Chromosome:
+    ChromosomeMonobehaviour: {fileID: 0}
     GeneList: []
+    MinTorque: -60
+    MaxTorque: 100
 --- !u!114 &114468098888121238
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -647,7 +650,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Chromosome:
+    ChromosomeMonobehaviour: {fileID: 0}
     GeneList: []
+    MinTorque: -60
+    MaxTorque: 100
 --- !u!135 &135533106744754710
 SphereCollider:
   m_ObjectHideFlags: 1

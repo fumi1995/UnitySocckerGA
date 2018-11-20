@@ -16,7 +16,11 @@ public class IndividualMonobehaviour : InitializationMonobehaviour
     {
         base.Initialization();
 
-        Indivudual.ChromosomeList = GetComponentsInChildren<ChromosomeMonobehaviour>().Select(chromosomeMonobehaviour => chromosomeMonobehaviour.Chromosome).ToList();
+        var chromesomeMonobehaviorList = GetComponentsInChildren<ChromosomeMonobehaviour>().ToList();
+
+        chromesomeMonobehaviorList.ForEach(chromesomeMonobehavior => chromesomeMonobehavior.Chromosome.ChromosomeMonobehaviour = chromesomeMonobehavior);
+
+        Indivudual.ChromosomeList = chromesomeMonobehaviorList.Select(chromosomeMonobehaviour => chromosomeMonobehaviour.Chromosome).ToList();
 
         Indivudual.IndividualMonobehaviour.ScoreText.SetText(Indivudual.Evaluation.ToString());
     }

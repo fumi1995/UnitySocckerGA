@@ -230,7 +230,7 @@ public class GeneticAlgorithm : SingletonMonobehaviour<GeneticAlgorithm> {
             {
                 for (var index = 0; index < GeneLength; index++)
                 {
-                    individual.ChromosomeList[chromeIdx].GeneList[index] = Mathf.Clamp(individual.ChromosomeList[chromeIdx].GeneList[index], MinTorque, MaxTorque);
+                    individual.ChromosomeList[chromeIdx].GeneList[index] = Mathf.Clamp(individual.ChromosomeList[chromeIdx].GeneList[index], individual.ChromosomeList[chromeIdx].MinTorque, individual.ChromosomeList[chromeIdx].MaxTorque);
                 }
             }
 
